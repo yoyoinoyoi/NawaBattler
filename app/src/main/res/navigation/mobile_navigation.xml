@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.nawabattler.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/deckFragment"
+        android:name="com.example.nawabattler.ui.deck.DeckFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_deck">
+    </fragment>
+
+    <fragment
+        android:id="@+id/lobbyFragment"
+        android:name="com.example.nawabattler.ui.lobby.LobbyFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_lobby">
+        <action
+            android:id="@+id/action_lobbyFragment_to_battleFragment"
+            app:destination="@id/battleFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/battleFragment"
+        android:name="com.example.nawabattler.ui.battle.BattleFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_battle">
+        <argument
+            android:name="opponentNumber"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_battleFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
+</navigation>

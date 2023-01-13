@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mainColor"
+    tools:context=".ui.battle.BattleFragment">
+
+    <GridLayout
+        android:id="@+id/fieldGrid"
+        android:layout_width="400dp"
+        android:layout_height="480dp"
+        android:layout_gravity="center_vertical"
+        android:columnCount="10"
+        android:rowCount="12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/Turn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="@string/Turn"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/You"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="60dp"
+        android:text="You :"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/playerColor"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/blue"
+        app:layout_constraintStart_toEndOf="@+id/You"
+        app:layout_constraintTop_toBottomOf="@+id/Turn"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="@string/versus"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/playerColor"
+        app:layout_constraintTop_toBottomOf="@+id/Turn"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/cardbutton1"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="124dp"
+        android:background="@drawable/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/cardbutton2"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="124dp"
+        android:background="@drawable/white"
+        app:layout_constraintStart_toEndOf="@+id/cardbutton1"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/cardbutton3"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="124dp"
+        android:background="@drawable/white"
+        app:layout_constraintStart_toEndOf="@+id/cardbutton2"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/rotatebutton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="340dp"
+        android:layout_marginTop="124dp"
+        android:background="@drawable/rotate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/passbutton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="340dp"
+        android:layout_marginTop="184dp"
+        android:background="@drawable/dust"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
