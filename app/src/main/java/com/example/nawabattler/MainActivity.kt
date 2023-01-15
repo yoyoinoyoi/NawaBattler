@@ -1,6 +1,7 @@
 package com.example.nawabattler
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -32,5 +33,9 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            navView.visibility = if(destination.id == R.id.battleFragment) View.GONE else View.VISIBLE
+        }
     }
 }
