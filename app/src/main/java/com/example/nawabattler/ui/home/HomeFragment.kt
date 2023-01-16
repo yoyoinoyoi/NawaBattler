@@ -33,6 +33,14 @@ class HomeFragment : Fragment() {
         // デッキはdeckContent ファイルにid として記載されている
         val file = File(internal, "playerStatics")
 
+        // ファイルが無ければ作成する
+        if (!file.exists()){
+            val bufferedWriter = file.bufferedWriter()
+            val fileContent = "player\n0\n0\n0\n0"
+            bufferedWriter.write(fileContent)
+            bufferedWriter.close()
+        }
+
         val bufferedReader = file.bufferedReader()
         var t = 0
         bufferedReader.readLines().forEach {
@@ -43,8 +51,8 @@ class HomeFragment : Fragment() {
 
         binding.editTextTextPersonName.hint = playerStatics[0]
         binding.playerWinLossRecordNumber.text = "${playerStatics[1]} 勝 ${playerStatics[2]} 敗"
-        binding.playerNowWinStreakNumber.text = "${playerStatics[3]} 連勝"
-        binding.playerMaxWinStreakNumber.text = "${playerStatics[4]} 連勝"
+        binding.playerMaxWinStreakNumber.text = "${playerStatics[3]} 連勝"
+        binding.playerNowWinStreakNumber.text = "${playerStatics[4]} 連勝"
 
         // playerName を変更する
         binding.editTextTextPersonName

@@ -41,19 +41,19 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             navView.visibility = if(destination.id == R.id.battleFragment) View.GONE else View.VISIBLE
         }
-
-        // プレイヤーの情報を初期化する(まだ作成していない場合)
-        val internal = applicationContext.filesDir
-        // デッキはdeckContent ファイルにid として記載されている
-        val file = File(internal, "playerStatics")
-
-        // ファイルが無ければ作成する
-        if (!file.exists()){
-            val bufferedWriter = file.bufferedWriter()
-            val fileContent = "player\n0\n0\n0\n0"
-            bufferedWriter.write(fileContent)
-            bufferedWriter.close()
-        }
+//
+//        // プレイヤーの情報を初期化する(まだ作成していない場合)
+//        val internal = applicationContext.filesDir
+//        // デッキはdeckContent ファイルにid として記載されている
+//        val file = File(internal, "playerStatics")
+//
+//        // ファイルが無ければ作成する
+//        if (!file.exists()){
+//            val bufferedWriter = file.bufferedWriter()
+//            val fileContent = "player\n0\n0\n0\n0"
+//            bufferedWriter.write(fileContent)
+//            bufferedWriter.close()
+//        }
 
     }
 }
