@@ -13,11 +13,13 @@
         android:layout_margin="16dp"
         android:text=""
         tools:text="タイトル"
-        android:textSize="20sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false" />
 
     <TextView
         android:id="@+id/message"
@@ -26,9 +28,12 @@
         android:layout_margin="16dp"
         android:text=""
         tools:text="メッセージ"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false"/>
 
     <View
         android:id="@+id/divider"
@@ -49,5 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false" />
 </androidx.constraintlayout.widget.ConstraintLayout>

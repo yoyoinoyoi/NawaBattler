@@ -16,7 +16,9 @@
         android:text="対戦相手を選んでください"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playerRecyclerView"

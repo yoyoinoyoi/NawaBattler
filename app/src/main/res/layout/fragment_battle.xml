@@ -34,7 +34,9 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false" />
 
     <TextView
         android:id="@+id/You"
@@ -48,7 +50,9 @@
         android:textSize="35sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false" />
 
     <ImageView
         android:id="@+id/playerColor"
@@ -74,7 +78,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/playerColor"
         app:layout_constraintTop_toBottomOf="@+id/Turn"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false" />
 
     <ImageButton
         android:id="@+id/cardbutton1"

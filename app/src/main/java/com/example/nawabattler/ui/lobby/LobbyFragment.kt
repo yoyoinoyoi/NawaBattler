@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.nawabattler.LobbyFragmentAdapter
 import com.example.nawabattler.R
 import com.example.nawabattler.data.AllCard
 import com.example.nawabattler.databinding.FragmentLobbyBinding

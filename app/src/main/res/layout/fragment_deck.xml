@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="8dp"
         android:scrollbars="vertical"
         android:layout_marginBottom="240dp"
@@ -27,13 +27,15 @@
         android:id="@+id/textView2"
         android:layout_width="234dp"
         android:layout_height="36dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="4dp"
         android:text="あなたのデッキ"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/cardViewGrid"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false" />
 
     <GridLayout
         android:id="@+id/cardViewGrid"
@@ -46,5 +48,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="395dp"
+        android:layout_height="36dp"
+        android:textSize="28sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="持ってるカード"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
