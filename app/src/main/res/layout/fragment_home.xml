@@ -41,7 +41,9 @@
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"/>
 
     <TableLayout
         android:id="@+id/playerStatics"
@@ -65,7 +67,8 @@
                 android:textSize="24sp"
                 android:text="通算成績"
                 android:fontFamily="@font/dotgothic"
-                android:includeFontPadding="false"/>
+                android:includeFontPadding="false"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/playerWinLossRecordNumber"
@@ -75,7 +78,8 @@
                 android:text="0"
                 android:textSize="24sp"
                 android:fontFamily="@font/dotgothic"
-                android:includeFontPadding="false"/>
+                android:includeFontPadding="false"
+                android:textColor="@color/black"/>
         </TableRow>
 
         <TableRow
@@ -90,7 +94,8 @@
                 android:textSize="24sp"
                 android:text="最多連勝"
                 android:fontFamily="@font/dotgothic"
-                android:includeFontPadding="false"/>
+                android:includeFontPadding="false"
+                android:textColor="@color/black"/>
             <TextView
                 android:id="@+id/playerMaxWinStreakNumber"
                 android:background="@color/gray2"
@@ -99,7 +104,8 @@
                 android:textSize="24sp"
                 android:text="0"
                 android:fontFamily="@font/dotgothic"
-                android:includeFontPadding="false"/>
+                android:includeFontPadding="false"
+                android:textColor="@color/black"/>
         </TableRow>
 
         <TableRow
@@ -114,7 +120,8 @@
                 android:textSize="24sp"
                 android:text="現在の連勝"
                 android:fontFamily="@font/dotgothic"
-                android:includeFontPadding="false"/>
+                android:includeFontPadding="false"
+                android:textColor="@color/black"/>
             <TextView
                 android:id="@+id/playerNowWinStreakNumber"
                 android:background="@color/gray1"
@@ -123,7 +130,8 @@
                 android:textSize="24sp"
                 android:text="0"
                 android:fontFamily="@font/dotgothic"
-                android:includeFontPadding="false"/>
+                android:includeFontPadding="false"
+                android:textColor="@color/black"/>
         </TableRow>
 
     </TableLayout>
@@ -140,19 +148,7 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playerStatics"
-        android:includeFontPadding="false" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/resultRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="276dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="UnknownId" />
-
+        android:includeFontPadding="false"
+        android:textColor="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

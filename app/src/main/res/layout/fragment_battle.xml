@@ -28,7 +28,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:text="@string/Turn"
-        android:textColor="@color/white"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -36,7 +35,8 @@
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
         tools:ignore="MissingConstraints"
         android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/You"
@@ -46,13 +46,13 @@
         android:layout_marginStart="28dp"
         android:layout_marginTop="60dp"
         android:text="You :"
-        android:textColor="@color/white"
         android:textSize="35sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
         tools:ignore="MissingConstraints"
         android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        android:textColor="@color/black" />
 
     <ImageView
         android:id="@+id/playerColor"
@@ -73,14 +73,14 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"
         android:text="@string/versus"
-        android:textColor="@color/white"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/playerColor"
         app:layout_constraintTop_toBottomOf="@+id/Turn"
         tools:ignore="MissingConstraints"
         android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        android:textColor="@color/black" />
 
     <ImageButton
         android:id="@+id/cardbutton1"

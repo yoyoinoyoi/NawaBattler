@@ -19,7 +19,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        android:textColor="@color/black"  />
 
     <TextView
         android:id="@+id/message"
@@ -33,7 +34,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false"/>
+        android:includeFontPadding="false"
+        android:textColor="@color/black" />
 
     <View
         android:id="@+id/divider"

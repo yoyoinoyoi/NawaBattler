@@ -35,7 +35,8 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
         android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        android:textColor="@color/black" />
 
     <GridLayout
         android:id="@+id/cardViewGrid"
@@ -60,6 +61,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        android:textColor="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
