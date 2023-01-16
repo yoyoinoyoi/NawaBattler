@@ -1,4 +1,4 @@
-package com.example.nawabattler
+package com.example.nawabattler.ui.lobby
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +7,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.nawabattler.data.AllCard
+import com.example.nawabattler.R
 import com.example.nawabattler.data.OpponentData
-import com.example.nawabattler.structure.PlayerData
 
 class LobbyFragmentAdapter():
     RecyclerView.Adapter<LobbyFragmentAdapter.ViewHolder>() {
