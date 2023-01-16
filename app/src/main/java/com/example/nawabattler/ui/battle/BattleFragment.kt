@@ -18,6 +18,7 @@ import com.example.nawabattler.structure.Condition
 import com.example.nawabattler.structure.DeckManager
 import com.example.nawabattler.structure.FieldManager
 import java.io.File
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 class BattleFragment : Fragment() {
@@ -238,14 +239,41 @@ class BattleFragment : Fragment() {
         }
         // ゲーム終了なら
         else if (nowTurnCount > totalTurn){
-            val resultText : String =
-                if (player1Score > player2Score){
-                    "WIN!!"
-                } else if (player1Score < player2Score){
-                    "LOSE..."
-                } else{
-                    "DRAW"
-                }
+            val playerStatics = arrayOf("","","","","")
+
+            val internal = requireContext().filesDir
+            // デッキはdeckContent ファイルにid として記載されている
+            val file = File(internal, "playerStatics")
+
+            val bufferedReader = file.bufferedReader()
+            var t = 0
+            bufferedReader.readLines().forEach {
+                // ファイルに記載されているid を一時データに保存
+                playerStatics[t] = it
+                t++
+            }
+
+            val resultText : String
+            if (player1Score > player2Score){
+                resultText = "YOU WIN!!"
+                playerStatics[1] = (playerStatics[1].toInt() +1).toString()
+                playerStatics[4] = (playerStatics[4].toInt() +1).toString()
+                playerStatics[3] = max(playerStatics[3].toInt(), playerStatics[4].toInt()).toString()
+            } else if (player1Score < player2Score){
+                resultText = "YOU LOSE..."
+                playerStatics[2] = (playerStatics[2].toInt() +1).toString()
+                playerStatics[4] = "0"
+            } else{
+                resultText = "DRAW"
+            }
+
+            val bufferedWriter = file.bufferedWriter()
+            playerStatics.forEach(){
+                println(it.toString())
+                bufferedWriter.write(it.toString())
+                bufferedWriter.newLine()
+            }
+            bufferedWriter.close()
 
             // 結果をダイアログで表示
             CustomDialog.Builder(this)

@@ -1,18 +1,25 @@
 package com.example.nawabattler.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import com.example.nawabattler.CustomDialog
+import com.example.nawabattler.data.AllCard
 import com.example.nawabattler.databinding.FragmentHomeBinding
+import java.io.File
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private var playerStatics = arrayOf("", "", "", "", "")
+
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -20,22 +27,44 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
-//
-//        // バトル準備画面に遷移
-//        binding.battleButton.setOnClickListener {
-//            val action = MainFragmentDirections.actionMainFragmentToDeckFragment()
-//            findNavController().navigate(action)
-//        }
 
-        // バトル準備画面に遷移
-        binding.galleryButton.setOnClickListener {
-            CustomDialog.Builder(this)
-                .setTitle("カスタムタイトル")
-                .setMessage("カスタムメッセージ")
-                .setPositiveButton("はい") {  }
-                .build()
-                .show(childFragmentManager, CustomDialog::class.simpleName)
+
+        val internal = requireContext().filesDir
+        // デッキはdeckContent ファイルにid として記載されている
+        val file = File(internal, "playerStatics")
+
+        val bufferedReader = file.bufferedReader()
+        var t = 0
+        bufferedReader.readLines().forEach {
+            // ファイルに記載されているid を一時データに保存
+            playerStatics[t] = it
+            t++
         }
+
+        binding.editTextTextPersonName.hint = playerStatics[0]
+        binding.playerWinLossRecordNumber.text = "${playerStatics[1]} 勝 ${playerStatics[2]} 敗"
+        binding.playerNowWinStreakNumber.text = "${playerStatics[3]} 連勝"
+        binding.playerMaxWinStreakNumber.text = "${playerStatics[4]} 連勝"
+
+        // playerName を変更する
+        binding.editTextTextPersonName
+            .setOnEditorActionListener{ editText, action, _ ->
+                if (action == EditorInfo.IME_ACTION_NEXT){
+                    editText.text.toString().let {
+                        playerStatics[0] = editText.text.toString()
+                        val bufferedWriter = file.bufferedWriter()
+                        playerStatics.forEach(){
+                            println(it.toString())
+                            bufferedWriter.write(it.toString())
+                            bufferedWriter.newLine()
+                        }
+                        bufferedWriter.close()
+
+                    }
+                    return@setOnEditorActionListener true
+                }
+                return@setOnEditorActionListener false
+            }
         return view
     }
 
