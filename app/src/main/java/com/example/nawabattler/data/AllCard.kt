@@ -18,7 +18,7 @@ val AllCard = arrayOf(
     Card(
         R.drawable.parasol,
         arrayOf(
-            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0),
             intArrayOf(0, 1, 1, 1, 0),
             intArrayOf(1, 0, 1, 0, 1),
             intArrayOf(0, 0, 1, 0, 0),
@@ -36,29 +36,29 @@ val AllCard = arrayOf(
         )
     ),
     Card(
-        R.drawable.dynamite,
+        R.drawable.monument,
         arrayOf(
             intArrayOf(0, 0, 0, 0, 0),
-            intArrayOf(0, 1, 1, 1, 0),
-            intArrayOf(0, 1, 1, 1, 0),
-            intArrayOf(0, 1, 1, 1, 0),
+            intArrayOf(0, 0, 1, 1, 0),
+            intArrayOf(0, 0, 1, 1, 0),
+            intArrayOf(0, 0, 0, 0, 0),
             intArrayOf(0, 0, 0, 0, 0)
         )
     ),
     Card(
-        R.drawable.hinawaju,
+        R.drawable.lifle,
         arrayOf(
-            intArrayOf(0, 1, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
             intArrayOf(0, 0, 1, 1, 0),
-            intArrayOf(0, 0, 1, 0, 0),
-            intArrayOf(0, 0, 1, 0, 0),
-            intArrayOf(0, 0, 1, 0, 0)
+            intArrayOf(0, 1, 1, 0, 0)
         )
     ),
     Card(
         R.drawable.scythe,
         arrayOf(
-            intArrayOf(0, 0, 1, 1, 1),
+            intArrayOf(0, 0, 1, 1, 0),
             intArrayOf(0, 1, 0, 1, 1),
             intArrayOf(0, 1, 0, 0, 1),
             intArrayOf(0, 1, 0, 0, 0),
@@ -78,38 +78,38 @@ val AllCard = arrayOf(
     Card(
         R.drawable.wave,
         arrayOf(
-            intArrayOf(0, 1, 1, 1, 1),
-            intArrayOf(1, 1, 1, 1, 0),
-            intArrayOf(0, 0, 1, 0, 0),
             intArrayOf(0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 1, 1, 1, 1),
+            intArrayOf(1, 0, 1, 1, 0),
             intArrayOf(0, 0, 0, 0, 0)
         )
     ),
     Card(
-        R.drawable.dragon,
+        R.drawable.thunder,
         arrayOf(
-            intArrayOf(0, 0, 0, 1, 1),
-            intArrayOf(0, 0, 0, 1, 1),
+            intArrayOf(0, 0, 0, 1, 0),
+            intArrayOf(0, 0, 0, 1, 0),
             intArrayOf(0, 0, 1, 0, 0),
-            intArrayOf(0, 0, 1, 0, 0),
-            intArrayOf(1, 1, 0, 0, 0)
+            intArrayOf(0, 1, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0)
         )
     ),
     Card(
-        R.drawable.spider,
+        R.drawable.ghost,
         arrayOf(
-            intArrayOf(0, 1, 0, 0, 1),
-            intArrayOf(0, 1, 0, 0, 1),
-            intArrayOf(0, 0, 1, 1, 0),
-            intArrayOf(0, 1, 0, 0, 1),
-            intArrayOf(0, 1, 0, 0, 1)
+            intArrayOf(0, 1, 0, 1, 0),
+            intArrayOf(0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0)
         )
     ),
     Card(
         R.drawable.firework,
         arrayOf(
             intArrayOf(0, 0, 1, 0, 0),
-            intArrayOf(0, 1, 1, 1, 0),
+            intArrayOf(0, 1, 0, 1, 0),
             intArrayOf(0, 0, 1, 0, 0),
             intArrayOf(0, 0, 0, 0, 0),
             intArrayOf(0, 0, 1, 0, 0)
