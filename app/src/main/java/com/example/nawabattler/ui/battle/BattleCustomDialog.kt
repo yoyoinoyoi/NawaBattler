@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import com.example.nawabattler.databinding.LayoutCustomDialogBinding
 
-class CustomDialog : DialogFragment() {
+class BattleCustomDialog : DialogFragment() {
     private var title: String = ""
     private var message: String = ""
     private var positiveButtonText: String = ""
@@ -68,8 +68,8 @@ class CustomDialog : DialogFragment() {
             }
         }
 
-        fun build(): CustomDialog {
-            return CustomDialog().apply {
+        fun build(): BattleCustomDialog {
+            return BattleCustomDialog().apply {
                 arguments = bundle
             }
         }
