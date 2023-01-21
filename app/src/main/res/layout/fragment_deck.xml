@@ -9,6 +9,14 @@
 
     <!-- A RecyclerView with some commonly used attributes -->
 
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="2000dp"
+        android:layout_height="2000dp"
+        android:src="@drawable/background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cardRecyclerView"
         android:layout_width="match_parent"
@@ -29,7 +37,7 @@
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="4dp"
-        android:text="あなたのデッキ"
+        android:text="使用するデッキ"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/cardViewGrid"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +65,7 @@
         android:textSize="28sp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:text="持ってるカード"
+        android:text="持ってるカードの一覧"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:fontFamily="@font/dotgothic"
