@@ -1,6 +1,6 @@
 # NawaBattler
 
-NawaBattler は、スプラトゥーン3内のミニゲーム「ナワバトラー」をアレンジしたものです。
+NawaBattler は、陣取りゲームとカードゲームを融合したゲームです。
 
 # How to Play
 
@@ -8,16 +8,18 @@ NawaBattler は、スプラトゥーン3内のミニゲーム「ナワバトラ�
 
 [NawaBattler_v2.0.0.zip](https://github.com/yoyoinoyoi/NawaBattler/files/9835392/NawaBattler_v2.0.0.zip)
 
-使用可能な機能は以下になります。
+## ホーム
 
-## Battle!
+アプリを起動するとホーム画面に遷移し、プレイヤー名の設定や、戦績を見ることができます。
 
-ホーム画面から「Battle!」ボタンを押すとデッキ選択画面からデッキを選び、コンピュータと対戦することができます。
+## バトル!
 
-## Deck
+対戦相手を選んで、対戦することができます。
 
-ホーム画面から「Deck」ボタンを押すとデッキ編集画面に遷移し、デッキを編集することができます。
+## デッキ編集
+
+使用するデッキを、持っているカードから選んで編集することができます。
 
 # Movie
 
-https://youtu.be/kerFj2IkkAE
+https://youtu.be/kerFj2IkkAE (古いバージョンです)
