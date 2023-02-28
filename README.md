@@ -6,7 +6,7 @@ NawaBattler は、陣取りゲームとカードゲームを融合したゲー�
 
 以下のzip ファイルをダウンロードしてapkファイルを実行してください(Androidのみ)。
 
-[NawaBattler_v2.0.0.zip](https://github.com/yoyoinoyoi/NawaBattler/files/9835392/NawaBattler_v2.0.0.zip)
+[jindori_1.0.0.zip](https://github.com/yoyoinoyoi/NawaBattler/files/10847681/jindori_1.0.0.zip)
 
 ## ホーム
 
@@ -22,4 +22,4 @@ NawaBattler は、陣取りゲームとカードゲームを融合したゲー�
 
 # Movie
 
-https://youtu.be/kerFj2IkkAE (古いバージョンです)
+https://youtu.be/S7t9c1x3ZJE
