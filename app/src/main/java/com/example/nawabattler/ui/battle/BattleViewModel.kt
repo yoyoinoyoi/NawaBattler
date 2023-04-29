@@ -3,9 +3,7 @@ package com.example.nawabattler.ui.battle
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.*
-import com.example.nawabattler.data.AllCard
-import com.example.nawabattler.data.DECK_CONTENT
-import com.example.nawabattler.data.OpponentData
+import com.example.nawabattler.data.*
 import com.example.nawabattler.structure.Condition
 import com.example.nawabattler.structure.DeckManager
 import com.example.nawabattler.structure.FieldManager
@@ -40,11 +38,11 @@ class BattleViewModel(
     var player2Score = 0
 
     // 盤面を生成する
-    private val _fieldBase = Array(12){ Array(10){ Condition.Empty } }
+    private val _fieldBase = transConditionArray(standard)
     // ゲーム情報用の盤面
     private val fieldMain = FieldManager(_fieldBase)
     // UIに反映する用の盤面
-    val fieldSub = Array(12){ Array(10){ Condition.Empty } }
+    val fieldSub = transConditionArray(standard)
     // 更新フラグ
     val updateFlag : LiveData<Boolean>
         get() = _updateFlag

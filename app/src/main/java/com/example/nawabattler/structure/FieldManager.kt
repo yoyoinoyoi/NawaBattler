@@ -7,8 +7,6 @@ class FieldManager(initMap: Array<Array<Condition>>) {
     var field: Array<Array<Condition>>
     init{
         this.field = initMap
-        this.field[this.field.size-2][1] = Condition.Player1
-        this.field[1][this.field[0].size-2] = Condition.Player2
     }
 
     /*
