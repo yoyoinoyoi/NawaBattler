@@ -22,7 +22,7 @@ class BattleViewModel(
     // 現在カードを操作しているか
     private var cardFlag = false
     // 選択されたカードの識別番号
-    private val selectCardId = MutableLiveData(-1)
+    private var selectCardId = -1
     // 選択されたカードの能力(回転させるときなどに一時的に保持するため)
     private var selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0) }
     // 選択されたgrid の座標
@@ -72,16 +72,15 @@ class BattleViewModel(
         val bufferedReader = file.bufferedReader()
         bufferedReader.readLines().onEach {
             val cardId = it.toInt()
-            deck1.deck.add(AllCard[cardId])
+            deck1.addCard(AllCard[cardId])
         }
         // 選ばれた対戦相手のデッキを生成する
         for (i in 0 until OpponentData[opponentNumber].DeckId.size){
-            deck2.deck.add(AllCard[OpponentData[opponentNumber].DeckId[i]])
+            deck2.addCard(AllCard[OpponentData[opponentNumber].DeckId[i]])
         }
         // フロントへ更新
-        deck1.deckSetUp()
-        deck2.deckSetUp()
-        println("handcard: ${deck1.handCard}")
+        deck1.setUp()
+        deck2.setUp()
     }
 
     // 盤面をクリックしたとき、その情報を受け渡す
@@ -117,15 +116,15 @@ class BattleViewModel(
             cardFlag = false
             selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
 
-        } else if (cardFlag && (clickButton == selectCardId.value)){
+        } else if (cardFlag && (clickButton == selectCardId)){
             // 同じカードを連続でクリックした場合にはキャンセルする
             cardFlag = false
             selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
 
         } else {
             // 正常に受け渡す
-            selectCardId.value = clickButton
-            selectCardRange = deck1.deck[deck1.handCard[selectCardId.value!!]].Range
+            selectCardId = clickButton
+            selectCardRange = deck1.handCard(selectCardId).Range
             cardFlag = true
             fieldFlag = false
         }
@@ -206,7 +205,7 @@ class BattleViewModel(
             }
             if (candidates.isNotEmpty()){
                 val randomNum = (candidates.indices).random()
-                deck2.deckDraw(choiceCardId)
+                deck2.castCard(choiceCardId)
                 return Triple(candidates[randomNum], ranges[randomNum], Condition.Player2)
             }
         }
@@ -215,7 +214,7 @@ class BattleViewModel(
         for (choiceCardId in 0 until deck2.handCard.size){
             val choiceCard = deck2.handCard[choiceCardId]
             if (choiceCard != -1){
-                deck2.deckDraw(choiceCardId)
+                deck2.castCard(choiceCardId)
                 return Triple(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)},
                     Condition.Player2
                 )
@@ -261,7 +260,7 @@ class BattleViewModel(
 
         cardFlag = false
         fieldFlag = false
-        deck1.deckDraw(selectCardId.value!!)
+        deck1.castCard(selectCardId)
         selectGridCoordinates = intArrayOf(6, 4)
         selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
         _nowTurnCount.value = _nowTurnCount.value!! +1
@@ -294,7 +293,7 @@ class BattleViewModel(
     // ゲーム情報であるfieldMain が変わることはない
     private fun updateField() {
         println("update grid!")
-        println("${selectCardId.value}")
+        println("${selectCardId}")
         println("${selectGridCoordinates[0]}, ${selectGridCoordinates[1]}")
 
         // 以前仮置きしていたものを一度リセットする
