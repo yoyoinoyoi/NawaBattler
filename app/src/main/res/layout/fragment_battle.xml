@@ -48,7 +48,8 @@
         android:background="@drawable/anonymous"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
 
     <ImageView
         android:id="@+id/opponentImage"
@@ -60,7 +61,8 @@
         android:background="@drawable/yellow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
 
     <TextView
         android:id="@+id/score"
@@ -79,7 +81,7 @@
         tools:ignore="MissingConstraints" />
 
     <ImageButton
-        android:id="@+id/cardbutton1"
+        android:id="@+id/cardButton1"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:layout_marginStart="4dp"
@@ -87,32 +89,35 @@
         android:background="@drawable/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/cardbutton2"
+        android:id="@+id/cardButton2"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="124dp"
         android:background="@drawable/white"
-        app:layout_constraintStart_toEndOf="@+id/cardbutton1"
+        app:layout_constraintStart_toEndOf="@+id/cardButton1"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/cardbutton3"
+        android:id="@+id/cardButton3"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="124dp"
         android:background="@drawable/white"
-        app:layout_constraintStart_toEndOf="@+id/cardbutton2"
+        app:layout_constraintStart_toEndOf="@+id/cardButton2"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/rotatebutton"
+        android:id="@+id/rotateButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="340dp"
@@ -120,10 +125,11 @@
         android:background="@drawable/rotate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/passbutton"
+        android:id="@+id/passButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="340dp"
@@ -131,6 +137,7 @@
         android:background="@drawable/dust"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
