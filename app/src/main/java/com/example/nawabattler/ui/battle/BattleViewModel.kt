@@ -164,7 +164,7 @@ class BattleViewModel(
     }
 
     // コンピュータが実行するとき
-    private fun computerTurn(): Triple<IntArray, Array<IntArray>, Condition>{
+    private fun computerTurn(): Pair<IntArray, Array<IntArray>>{
         // deck はdeckField2 を用いる
 
         // 手札からまずカードを決める
@@ -204,7 +204,7 @@ class BattleViewModel(
             if (candidates.isNotEmpty()){
                 val randomNum = (candidates.indices).random()
                 deck2.castCard(choiceCardId)
-                return Triple(candidates[randomNum], ranges[randomNum], Condition.Player2)
+                return Pair(candidates[randomNum], ranges[randomNum])
             }
         }
 
@@ -213,14 +213,12 @@ class BattleViewModel(
             val choiceCard = deck2.handCard[choiceCardId]
             if (choiceCard != -1){
                 deck2.castCard(choiceCardId)
-                return Triple(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)},
-                    Condition.Player2
-                )
+                return Pair(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)})
             }
         }
 
         // たぶんここまでいかない
-        return Triple(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)}, Condition.Player2)
+        return Pair(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)})
     }
 
     // 自分と相手のカードから盤面を更新するまでの流れ
@@ -228,6 +226,7 @@ class BattleViewModel(
         val computer = computerTurn()
         var myRangeSize = 0
         var comRangeSize = 0
+        val comCardCoordinates = mutableListOf<IntArray>()
         val wallRange = Array(5){ intArrayOf(0, 0, 0, 0, 0) }
 
         // カードのキャスト順を求める
@@ -239,20 +238,37 @@ class BattleViewModel(
                 }
                 if (computer.second[i][j] == 1){
                     comRangeSize++
+                    val x = i -2 +computer.first[0]
+                    val y = j -2 +computer.first[1]
+                    comCardCoordinates.add(intArrayOf(x, y))
                 }
             }
         }
+
+        for (i in 0 until 5){
+            for (j in 0 until 5){
+                if (selectCardRange[i][j] == 0){
+                    continue
+                }
+                for ((x, y) in comCardCoordinates){
+                    if ((x == i -2 +selectGridCoordinates[0]) && (y == j -2 +selectGridCoordinates[1])){
+                        wallRange[i][j] = 1
+                    }
+                }
+            }
+        }
+
         // カードの範囲が大きい順に更新していく
         if (myRangeSize < comRangeSize){
-            fieldMain.setColor(computer.first, computer.second, computer.third)
+            fieldMain.setColor(computer.first, computer.second, Condition.Player2)
             fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
         } else if (myRangeSize > comRangeSize) {
             fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
-            fieldMain.setColor(computer.first, computer.second, computer.third)
+            fieldMain.setColor(computer.first, computer.second, Condition.Player2)
         }
         else {
             fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
-            fieldMain.setColor(computer.first, computer.second, computer.third)
+            fieldMain.setColor(computer.first, computer.second, Condition.Player2)
             fieldMain.setColor(selectGridCoordinates, wallRange, Condition.Wall)
         }
 
@@ -266,11 +282,9 @@ class BattleViewModel(
 
     // 実際にゲームが動くときにスコアを変更
     fun updateScore () {
-
         // まずフィールドの初期化
         player1Score = 0
         player2Score = 0
-
         // こっちが動けばいい
         for (i in 0 until fieldMain.field.size){
             for (j in 0 until fieldMain.field[0].size) {
