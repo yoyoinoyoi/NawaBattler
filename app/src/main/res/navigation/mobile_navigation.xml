@@ -35,7 +35,7 @@
         tools:layout="@layout/fragment_battle">
         <argument
             android:name="opponentNumber"
-            app:argType="string" />
+            app:argType="integer" />
         <action
             android:id="@+id/action_battleFragment_to_homeFragment"
             app:destination="@id/homeFragment" />

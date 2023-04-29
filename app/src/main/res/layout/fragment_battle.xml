@@ -27,43 +27,39 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false"
         android:text="@string/Turn"
+        android:textColor="@color/black"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints"
-        android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/You"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="60dp"
-        android:text="You :"
-        android:textSize="35sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints"
-        android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false"
-        android:textColor="@color/black" />
+        tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/playerColor"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/playerImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/blue"
-        app:layout_constraintStart_toEndOf="@+id/You"
-        app:layout_constraintTop_toBottomOf="@+id/Turn"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/anonymous"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/opponentImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/yellow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -71,16 +67,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="4dp"
-        android:text="@string/versus"
-        android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/playerColor"
-        app:layout_constraintTop_toBottomOf="@+id/Turn"
-        tools:ignore="MissingConstraints"
+        android:layout_marginTop="64dp"
         android:fontFamily="@font/dotgothic"
         android:includeFontPadding="false"
-        android:textColor="@color/black" />
+        android:text="@string/versus"
+        android:textColor="@color/black"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
 
     <ImageButton
         android:id="@+id/cardbutton1"

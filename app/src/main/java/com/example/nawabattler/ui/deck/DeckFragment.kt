@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nawabattler.R
 import com.example.nawabattler.data.AllCard
+import com.example.nawabattler.data.DECK_CONTENT
 import com.example.nawabattler.databinding.FragmentDeckBinding
 import java.io.*
 import kotlin.math.roundToInt
@@ -90,7 +91,7 @@ class DeckFragment : Fragment() {
 
         val internal = requireContext().filesDir
         // デッキはdeckContent ファイルにid として記載されている
-        val file = File(internal, "deckContent")
+        val file = File(internal, DECK_CONTENT)
 
         // ファイルが無ければ作成する
         if (!file.exists()){

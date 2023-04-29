@@ -9,14 +9,12 @@ import android.widget.GridLayout
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.nawabattler.*
+import com.example.nawabattler.data.AllCard
+import com.example.nawabattler.data.OpponentData
 import com.example.nawabattler.databinding.FragmentBattleBinding
 import com.example.nawabattler.structure.Condition
-import java.io.File
-import kotlin.math.max
 import kotlin.math.roundToInt
 
 class BattleFragment : Fragment() {
@@ -26,7 +24,7 @@ class BattleFragment : Fragment() {
 
     private val args: BattleFragmentArgs by navArgs()
 
-    private val battleViewModel: BattleViewModel by viewModels()
+    private val battleViewModel: BattleViewModel by viewModels { BattleViewModel.Factory(requireContext(), args.opponentNumber) }
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -37,8 +35,10 @@ class BattleFragment : Fragment() {
         _binding = FragmentBattleBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val battleViewModel = BattleViewModel(args.opponentNumber, requireContext())
-        // まずはボタンを生成
+        /**
+         * GridLayout のマスを生成する
+         */
+
         val column = 12
         val row = 10
         for (i in 0 until column * row) {
@@ -60,43 +60,48 @@ class BattleFragment : Fragment() {
         // そのボタンにクリックイベントを付与する
         for (i in 0 until binding.fieldGrid.childCount) {
             val v = binding.fieldGrid.getChildAt(i)
-            v.setOnClickListener {
-                battleViewModel.onClickGrid(i)
-                preview()
-            }
+            v.setOnClickListener { battleViewModel.onClickGrid(i) }
         }
 
-        // デッキファイルを読み込んで生成
-        battleViewModel.readDeckFile()
+        /**
+         * 対戦相手の画像を反映させる
+         */
+
+        binding.opponentImage.setBackgroundResource( OpponentData[args.opponentNumber].Image )
 
         /**
          * 各ボタンごとにクリックイベントを設定
          */
 
-        binding.cardbutton1.setOnClickListener {
-            battleViewModel.onClickCard(0)
-            preview()
-        }
-        binding.cardbutton2.setOnClickListener {
-            battleViewModel.onClickCard(1)
-            preview()
-        }
-        binding.cardbutton3.setOnClickListener {
-            battleViewModel.onClickCard(2)
-            preview()
-        }
-        binding.rotatebutton.setOnClickListener {
-            battleViewModel.onClickRotate()
-            preview()
-        }
-        binding.passbutton.setOnClickListener {
-            battleViewModel.onClickPass()
-            preview()
+        binding.cardbutton1.setOnClickListener { battleViewModel.onClickCard(0) }
+        binding.cardbutton2.setOnClickListener { battleViewModel.onClickCard(1) }
+        binding.cardbutton3.setOnClickListener { battleViewModel.onClickCard(2) }
+
+        binding.rotatebutton.setOnClickListener { battleViewModel.onClickRotate() }
+        binding.passbutton.setOnClickListener { battleViewModel.onClickPass() }
+
+        /**
+         * viewModel の値を監視する
+         */
+
+        // 実際に手を決めた時の動作
+        battleViewModel.nowTurnCount.observe(viewLifecycleOwner) {
+            battleViewModel.updateScore()
+            binding.score.text = scoreText()
+            binding.Turn.text = turnText()
+            binding.cardbutton1.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[0]].Image)
+            binding.cardbutton2.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[1]].Image)
+            binding.cardbutton3.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[2]].Image)
         }
 
-        battleViewModel.fieldMain.observe(viewLifecycleOwner, Observer{
-            updateField()
-        })
+        // 選択した盤面の座標に変更があった場合
+        battleViewModel.updateFlag.observe(viewLifecycleOwner) {
+            for (i in 0 until row * column) {
+                val v = binding.fieldGrid.getChildAt(i)
+                val cond = battleViewModel.fieldSub[i / row][i % row]
+                v.setBackgroundResource(conditionToImage(cond))
+            }
+        }
 
         return view
     }
@@ -107,152 +112,34 @@ class BattleFragment : Fragment() {
         _binding = null
     }
 
-    // デッキからカードをランダムで選んで設置する
-    private fun setCard (imageList: MutableList<Int>) {
-        // 枚数が足りない場合にはwhite で対応する
-        binding.cardbutton1.setBackgroundResource(imageList[0])
-        binding.cardbutton2.setBackgroundResource(imageList[1])
-        binding.cardbutton3.setBackgroundResource(imageList[2])
+    /**
+     * 表示に関する関数
+     */
+
+    private fun scoreText() : String {
+        val player1Score = battleViewModel.player1Score
+        val player2Score = battleViewModel.player2Score
+        return "$player1Score vs $player2Score"
     }
 
-    // fieldMain からフロントへの更新を行う
-    private fun updateField () {
-
-        val row = 10
-
-        // こっちが動けばいい
-        for (i in 0 until binding.fieldGrid.childCount) {
-            val fieldRow = i / row
-            val fieldColumn = i % row
-            val v = binding.fieldGrid.getChildAt(i)
-            when (battleViewModel.fieldMain.value!!.field[fieldRow][fieldColumn]) {
-                Condition.Player1 -> {
-                    v.setBackgroundResource(R.drawable.blue)
-                }
-                Condition.Player2 -> {
-                    v.setBackgroundResource(R.drawable.yellow)
-                }
-                else -> {
-                    v.setBackgroundResource(R.drawable.gray)
-                }
-            }
-        }
+    private fun turnText() : String {
+        val nowTurnCount = battleViewModel.nowTurnCount.value
+        val totalTurnCount = battleViewModel.totalTurn
+        return "$nowTurnCount / $totalTurnCount"
     }
 
-    @SuppressLint("SetTextI18n")
-     private fun viewUpdate(){
-        binding.score.text = "$battleViewModel.player1Score.value!! vs $battleViewModel.player2Score.value!!"
-        // 通常のTurn の更新
-        if (battleViewModel.nowTurnCount.value!! < battleViewModel.totalTurn.value!!){
-            binding.Turn.text = "Turn $battleViewModel.nowTurnCount.value!! / $battleViewModel.totalTurn.value!!"
+    private fun conditionToImage(condition : Condition) : Int{
+        val image = when(condition){
+            Condition.Empty -> R.drawable.gray
+            Condition.Player1 -> R.drawable.blue
+            Condition.Player2 -> R.drawable.yellow
+            Condition.Wall -> R.drawable.wall
+            Condition.TentativeOK -> R.drawable.tentative_blue
+            Condition.TentativeNG -> R.drawable.tentative_gray
+            Condition.TentativeCenterOK -> R.drawable.tentative_blue_core
+            Condition.TentativeCenterNG -> R.drawable.tentative_gray_core
+            Condition.TentativeCenterEmpty -> R.drawable.tentative_core
         }
-        // ゲーム終了なら
-        else if (battleViewModel.nowTurnCount.value!! > battleViewModel.totalTurn.value!!){
-            val playerStatics = arrayOf("","","","","")
-
-            val internal = requireContext().filesDir
-            // デッキはdeckContent ファイルにid として記載されている
-            val file = File(internal, "playerStatics")
-
-            val bufferedReader = file.bufferedReader()
-            var t = 0
-            bufferedReader.readLines().forEach {
-                // ファイルに記載されているid を一時データに保存
-                playerStatics[t] = it
-                t++
-            }
-
-            val resultText : String
-            if (battleViewModel.player1Score.value!! > battleViewModel.player2Score.value!!){
-                resultText = "YOU WIN!!"
-                playerStatics[1] = (playerStatics[1].toInt() +1).toString()
-                playerStatics[4] = (playerStatics[4].toInt() +1).toString()
-                playerStatics[3] = max(playerStatics[3].toInt(), playerStatics[4].toInt()).toString()
-            } else if (battleViewModel.player1Score.value!! < battleViewModel.player2Score.value!!){
-                resultText = "YOU LOSE..."
-                playerStatics[2] = (playerStatics[2].toInt() +1).toString()
-                playerStatics[4] = "0"
-            } else{
-                resultText = "DRAW"
-            }
-
-            val bufferedWriter = file.bufferedWriter()
-            playerStatics.forEach(){
-                println(it)
-                bufferedWriter.write(it)
-                bufferedWriter.newLine()
-            }
-            bufferedWriter.close()
-
-            // 結果をダイアログで表示
-            CustomDialog.Builder(this)
-                .setTitle(resultText)
-                .setMessage("$battleViewModel.player1Score.value!! vs $battleViewModel.player2Score.value!!")
-                .setPositiveButton("OK") {
-                    val action = BattleFragmentDirections.actionBattleFragmentToHomeFragment()
-                    findNavController().navigate(action)
-                }
-                .build()
-                .show(childFragmentManager, CustomDialog::class.simpleName)
-
-        }
-        else{
-            binding.Turn.text = "Final Turn!"
-        }
-        battleViewModel.incrementNowTurn()
+        return image
     }
-
-    // プレビューを表示する
-    private fun preview(){
-
-        updateField()
-        // 中央部をまず表示(中央部がかぶっている処理は後ろで行う)
-        val coreImage = binding.fieldGrid.getChildAt (
-            10 * battleViewModel.selectGridCoordinates.value!![0] +battleViewModel.selectGridCoordinates.value!![1]
-        )
-        coreImage.setBackgroundResource(R.drawable.tentative_core)
-
-        // カードの範囲から座標にまず変換する
-        for (i in battleViewModel.selectCardRange.value!!.indices){
-            for (j in 0 until battleViewModel.selectCardRange.value!![0].size){
-                if (battleViewModel.selectCardRange.value!![i][j] == 1){
-
-                    val x = battleViewModel.selectGridCoordinates.value!![0] + (i -2)
-                    val y = battleViewModel.selectGridCoordinates.value!![1] + (j -2)
-                    // 範囲外なら何もしない
-                    if ((x < 0) || (x >= battleViewModel.fieldMain.value!!.field.size)){
-                        continue
-                    }
-                    if ((y < 0) || (y >= battleViewModel.fieldMain.value!!.field[0].size)){
-                        continue
-                    }
-
-                    val myImage = binding.fieldGrid.getChildAt (10 * x + y)
-
-                    if ((i == 2) && (j == 2)){
-                        if (battleViewModel.fieldMain.value!!.field[x][y] == Condition.Empty){
-                            myImage.setBackgroundResource(R.drawable.tentative_blue_core)
-                        }
-                        //置けないなら灰色
-                        else{
-                            myImage.setBackgroundResource(R.drawable.tentative_gray_core)
-                        }
-                    }
-                    else{
-
-                        // 置けるのであれば水色
-                        if (battleViewModel.fieldMain.value!!.field[x][y] == Condition.Empty) {
-                            myImage.setBackgroundResource(R.drawable.tentative_blue)
-                        }
-                        //置けないなら灰色
-                        else {
-                            myImage.setBackgroundResource(R.drawable.tentative_gray)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
 }

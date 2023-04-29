@@ -111,12 +111,27 @@ class FieldManager(initMap: Array<Array<Condition>>) {
             }
 
             // 該当マスがすでに埋まっていたら置くことができない
-            if (this.field[vx][vy] !== Condition.Empty){
+            if (!canSetPoint(this.field[vx][vy])){
                 return false
             }
         }
 
         return positionFlag
+    }
+
+    private fun canSetPoint(condition: Condition): Boolean{
+        val ret = when(condition){
+            Condition.Empty -> true
+            Condition.Player1 -> false
+            Condition.Player2 -> false
+            Condition.Wall -> false
+            Condition.TentativeOK -> true
+            Condition.TentativeNG -> false
+            Condition.TentativeCenterEmpty -> true
+            Condition.TentativeCenterOK -> true
+            Condition.TentativeCenterNG -> false
+        }
+        return ret
     }
 
     /*

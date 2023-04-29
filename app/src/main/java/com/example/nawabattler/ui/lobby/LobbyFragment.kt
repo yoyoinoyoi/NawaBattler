@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nawabattler.R
-import com.example.nawabattler.data.AllCard
 import com.example.nawabattler.databinding.FragmentLobbyBinding
 
 class LobbyFragment : Fragment() {
@@ -36,11 +35,6 @@ class LobbyFragment : Fragment() {
         // リストに区切り線を追加
         val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
 
-        val images: ArrayList<Int> = arrayListOf()
-        for (element in AllCard) {
-            images.add(element.Image)
-        }
-
         val adapter = LobbyFragmentAdapter()
 
         // バインディングに適用
@@ -53,6 +47,7 @@ class LobbyFragment : Fragment() {
          */
 
         // playerRecyclerView をクリックしたときに実行する関数
+
         adapter.setOnItemClickListener(object : LobbyFragmentAdapter.OnItemClickListener {
             override fun onItemClickListener(view: View, position: Int) {
                 onClickPlayer(view, position)
@@ -83,12 +78,14 @@ class LobbyFragment : Fragment() {
         selectPlayerNumber = position
         selectPlayerView = view
         view.setBackgroundResource(R.color.selected)
+
+
     }
 
     private fun onClickGoToBattleButton(){
         if (selectPlayerNumber >= 0){
             val action = LobbyFragmentDirections
-            .actionLobbyFragmentToBattleFragment(selectPlayerNumber.toString())
+            .actionLobbyFragmentToBattleFragment(selectPlayerNumber)
             findNavController().navigate(action)
         }
     }

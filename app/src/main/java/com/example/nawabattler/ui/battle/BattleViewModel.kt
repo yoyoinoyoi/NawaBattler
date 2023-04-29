@@ -2,12 +2,9 @@ package com.example.nawabattler.ui.battle
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.nawabattler.R
+import androidx.lifecycle.*
 import com.example.nawabattler.data.AllCard
+import com.example.nawabattler.data.DECK_CONTENT
 import com.example.nawabattler.data.OpponentData
 import com.example.nawabattler.structure.Condition
 import com.example.nawabattler.structure.DeckManager
@@ -16,68 +13,78 @@ import java.io.File
 
 @SuppressLint("StaticFieldLeak")
 class BattleViewModel(
-    private val opponentNumber: String,
-    val context: Context
-    ) : ViewModel() {
+    opponentNumber : Int,
+    context : Context
+) : ViewModel() {
 
     // 現在グリッドを操作しているか
     private var fieldFlag = false
     // 現在カードを操作しているか
     private var cardFlag = false
     // 選択されたカードの識別番号
-    private var selectCardId = -1
+    private val selectCardId = MutableLiveData(-1)
+    // 選択されたカードの能力(回転させるときなどに一時的に保持するため)
+    private var selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0) }
+    // 選択されたgrid の座標
+    private var selectGridCoordinates = intArrayOf(6, 4)
+    // 全ターン数
+    val totalTurn = 5
+    // 今のターン数
+    val nowTurnCount: LiveData<Int>
+        get() = _nowTurnCount
+    private val _nowTurnCount = MutableLiveData(1)
 
-    private var fieldBase = Array(12){ Array(10){ Condition.Empty } }
-    private val deck1 = DeckManager()
+    // Player1 のスコア
+    var player1Score = 0
+    // Player2 のスコア
+    var player2Score = 0
+
+    // 盤面を生成する
+    private val _fieldBase = Array(12){ Array(10){ Condition.Empty } }
+    // ゲーム情報用の盤面
+    private val fieldMain = FieldManager(_fieldBase)
+    // UIに反映する用の盤面
+    val fieldSub = Array(12){ Array(10){ Condition.Empty } }
+    // 更新フラグ
+    val updateFlag : LiveData<Boolean>
+        get() = _updateFlag
+    private  val _updateFlag = MutableLiveData(false)
+
+    val deck1 = DeckManager()
     private val deck2 = DeckManager()
 
-    // Fragment でも使う変数
+    // コンストラクタに引数を持たせるための工夫
+    class Factory(
+        private val context: Context,
+        private val opponentNumber: Int
+    ) : ViewModelProvider.NewInstanceFactory() {
 
-    // 選択されたカードの能力(回転させるときなどに一時的に保持するため)
-    private var _selectCardRange = MutableLiveData(Array(5){ intArrayOf(0, 0, 0, 0, 0) })
-    val selectCardRange: LiveData<Array<IntArray>>get() = _selectCardRange
-    // 選択されたgrid の座標
-    private var _selectGridCoordinates = MutableLiveData(intArrayOf(6, 4))
-    val selectGridCoordinates: LiveData<IntArray> get() = _selectGridCoordinates
-    // 全ターン数
-    private val _totalTurn = MutableLiveData(5)
-    val totalTurn: LiveData<Int> get() = _totalTurn
-    // 今のターン数
-    private var _nowTurnCount = MutableLiveData(1)
-    val nowTurnCount: LiveData<Int> get() = _nowTurnCount
-    // Player1 のスコア
-    private var _player1Score = MutableLiveData(0)
-    val player1Score: LiveData<Int> get() = _player1Score
-    // Player2 のスコア
-    private var _player2Score = MutableLiveData(0)
-    val player2Score: LiveData<Int> get() = _player2Score
-    private val _fieldMain = MutableLiveData(FieldManager(fieldBase))
-    val fieldMain: LiveData<FieldManager> get() = _fieldMain
+        @Suppress("unchecked_cast")
+        override fun <T : ViewModel> create(modelClass: Class<T>) =
+            BattleViewModel(opponentNumber, context) as T
+    }
 
-    fun readDeckFile(){
-
+    init {
         // プレイヤーのデッキを生成する
         val internal = context.filesDir
-        val file = File(internal, "deckContent")
+        val file = File(internal, DECK_CONTENT)
         // ファイルにかかれたカードの画像を表示する
         val bufferedReader = file.bufferedReader()
-
-        bufferedReader.readLines().forEach {
+        bufferedReader.readLines().onEach {
             val cardId = it.toInt()
             deck1.deck.add(AllCard[cardId])
         }
-
         // 選ばれた対戦相手のデッキを生成する
-
-        for (i in 0 until OpponentData[opponentNumber.toInt()].DeckId.size){
-            deck2.deck.add(AllCard[OpponentData[opponentNumber.toInt()].DeckId[i]])
+        for (i in 0 until OpponentData[opponentNumber].DeckId.size){
+            deck2.deck.add(AllCard[OpponentData[opponentNumber].DeckId[i]])
         }
         // フロントへ更新
         deck1.deckSetUp()
         deck2.deckSetUp()
-
+        println("handcard: ${deck1.handCard}")
     }
 
+    // 盤面をクリックしたとき、その情報を受け渡す
     fun onClickGrid(clickIndex : Int){
 
         // カードが選択されていなければ何もしない
@@ -88,22 +95,18 @@ class BattleViewModel(
         // クリックしたボタンを座標に変換
         val index = intArrayOf(clickIndex / 10, clickIndex % 10)
 
-        // プレビューを表示する
-        if ( !( fieldFlag && (index[0] == _selectGridCoordinates.value!![0]) && (index[1] == _selectGridCoordinates.value!![1]) ) ){
+        // 確定ボタン以外で盤面をクリックした場合
+        if ( !( fieldFlag && (index[0] == selectGridCoordinates[0]) && (index[1] == selectGridCoordinates[1]) ) ){
 
-            _selectGridCoordinates.value = index
+            selectGridCoordinates = index
             fieldFlag = true
-            // preview()
-            return
         }
-
         // 置ければ置く
-        if ( fieldMain.value!!.canSet(index, _selectCardRange.value!!, Condition.Player1) ){
+        else if ( fieldMain.canSet(index, selectCardRange, Condition.Player1) ){
             play()
-//            updateField(fieldMain.field)
-//            viewUpdate()
-//            setCard(deck1.deckImageList())
         }
+        updateField()
+        return
     }
 
     // 画面下のカードをクリックしたとき、その情報を受け渡す
@@ -112,22 +115,21 @@ class BattleViewModel(
         if (deck1.handCard[clickButton] == -1){
             // カードが何もない時には何もしない
             cardFlag = false
-            _selectCardRange.value = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
+            selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
 
-        } else if (cardFlag && (clickButton == selectCardId)){
+        } else if (cardFlag && (clickButton == selectCardId.value)){
             // 同じカードを連続でクリックした場合にはキャンセルする
             cardFlag = false
-            _selectCardRange.value = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
+            selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
 
         } else {
             // 正常に受け渡す
-            selectCardId = clickButton
-            _selectCardRange.value = deck1.deck[deck1.handCard[selectCardId]].Range
+            selectCardId.value = clickButton
+            selectCardRange = deck1.deck[deck1.handCard[selectCardId.value!!]].Range
             cardFlag = true
             fieldFlag = false
-
         }
-        // preview()
+        updateField()
         return
     }
 
@@ -137,8 +139,8 @@ class BattleViewModel(
         if (!cardFlag) {
             return
         }
-        _selectCardRange.value = rotateRange(selectCardRange.value!!)
-        // preview()
+        selectCardRange = rotateRange(selectCardRange)
+        updateField()
     }
 
     // パスボタンをクリックしたときに実行される関数
@@ -146,12 +148,10 @@ class BattleViewModel(
         if (!cardFlag) {
             return
         }
-        _selectGridCoordinates.value = intArrayOf(0, 0)
-        _selectCardRange.value = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
+        selectGridCoordinates = intArrayOf(0, 0)
+        selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
         play()
-//        setCard(deck1.deckImageList())
-//        updateField(fieldMain.field)
-//        viewUpdate()
+        updateField()
     }
 
     // Range を右に90度だけ回転させる
@@ -164,31 +164,6 @@ class BattleViewModel(
             }
         }
         return newList
-    }
-
-    // スコアを数え上げるための関数
-    fun countPlayerScore () {
-
-        for (i in 0 until fieldMain.value!!.field.size) {
-            for (j in 0 until fieldMain.value!!.field[0].size) {
-                when (fieldMain.value!!.field[i][j]) {
-                    Condition.Player1 -> {
-                        _player1Score.value = player1Score.value!! +1
-                    }
-                    Condition.Player2 -> {
-                        _player2Score.value = player2Score.value!! +1
-                    }
-                    else -> {
-                        // pass
-                    }
-                }
-            }
-        }
-    }
-
-    // ターンの更新
-    fun incrementNowTurn(){
-        _nowTurnCount.value = nowTurnCount.value!! +1
     }
 
     // コンピュータが実行するとき
@@ -209,21 +184,21 @@ class BattleViewModel(
 
             val candidates = mutableListOf<IntArray>()
             val ranges = mutableListOf<Array<IntArray>>()
-            for (i in 0 until fieldMain.value!!.field.size){
-                for (j in 0 until fieldMain.value!!.field[0].size){
-                    if (fieldMain.value!!.canSet(intArrayOf(i, j), choiceRange1, Condition.Player2)){
+            for (i in 0 until fieldMain.field.size){
+                for (j in 0 until fieldMain.field[0].size){
+                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange1, Condition.Player2)){
                         candidates.add(intArrayOf(i, j))
                         ranges.add(choiceRange1)
                     }
-                    if (fieldMain.value!!.canSet(intArrayOf(i, j), choiceRange2, Condition.Player2)){
+                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange2, Condition.Player2)){
                         candidates.add(intArrayOf(i, j))
                         ranges.add(choiceRange2)
                     }
-                    if (fieldMain.value!!.canSet(intArrayOf(i, j), choiceRange3, Condition.Player2)){
+                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange3, Condition.Player2)){
                         candidates.add(intArrayOf(i, j))
                         ranges.add(choiceRange3)
                     }
-                    if (fieldMain.value!!.canSet(intArrayOf(i, j), choiceRange4, Condition.Player2)){
+                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange4, Condition.Player2)){
                         candidates.add(intArrayOf(i, j))
                         ranges.add(choiceRange4)
                     }
@@ -256,10 +231,13 @@ class BattleViewModel(
         val computer = computerTurn()
         var myRangeSize = 0
         var comRangeSize = 0
+        val wallRange = Array(5){ intArrayOf(0, 0, 0, 0, 0) }
+
+        // カードのキャスト順を求める
         // それぞれのカードの範囲を比較
         for (i in 0 until 5){
             for (j in 0 until 5){
-                if (_selectCardRange.value!![i][j] == 1){
+                if (selectCardRange[i][j] == 1){
                     myRangeSize++
                 }
                 if (computer.second[i][j] == 1){
@@ -267,33 +245,103 @@ class BattleViewModel(
                 }
             }
         }
-
-        val rv = Math.random()
-        // あなたのキャスト順を求める
-        val playOrder =
-            if (myRangeSize < comRangeSize){
-                true
-            } else if (myRangeSize > comRangeSize){
-                false
-            } else{
-                100 * rv > 50
-            }
-
         // カードの範囲が大きい順に更新していく
-        if (playOrder){
-            fieldMain.value!!.setColor(computer.first, computer.second, computer.third)
-            fieldMain.value!!.setColor(_selectGridCoordinates.value!!, _selectCardRange.value!!, Condition.Player1)
-        } else {
-            fieldMain.value!!.setColor(_selectGridCoordinates.value!!, _selectCardRange.value!!, Condition.Player1)
-            fieldMain.value!!.setColor(computer.first, computer.second, computer.third)
+        if (myRangeSize < comRangeSize){
+            fieldMain.setColor(computer.first, computer.second, computer.third)
+            fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
+        } else if (myRangeSize > comRangeSize) {
+            fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
+            fieldMain.setColor(computer.first, computer.second, computer.third)
+        }
+        else {
+            fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
+            fieldMain.setColor(computer.first, computer.second, computer.third)
+            fieldMain.setColor(selectGridCoordinates, wallRange, Condition.Wall)
         }
 
         cardFlag = false
         fieldFlag = false
-        deck1.deckDraw(selectCardId)
-        _selectGridCoordinates.value = intArrayOf(6, 4)
-        _selectCardRange.value = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
+        deck1.deckDraw(selectCardId.value!!)
+        selectGridCoordinates = intArrayOf(6, 4)
+        selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
+        _nowTurnCount.value = _nowTurnCount.value!! +1
     }
 
+    // 実際にゲームが動くときにスコアを変更
+    fun updateScore () {
 
+        // まずフィールドの初期化
+        player1Score = 0
+        player2Score = 0
+
+        // こっちが動けばいい
+        for (i in 0 until fieldMain.field.size){
+            for (j in 0 until fieldMain.field[0].size) {
+                when (fieldMain.field[i][j]) {
+                    Condition.Player1 -> {
+                        player1Score += 1
+                    }
+                    Condition.Player2 -> {
+                        player2Score += 1
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    // 設置予定場所とゲームの情報をリンクさせる
+    // ゲーム情報であるfieldMain が変わることはない
+    private fun updateField() {
+        println("update grid!")
+        println("${selectCardId.value}")
+        println("${selectGridCoordinates[0]}, ${selectGridCoordinates[1]}")
+
+        // 以前仮置きしていたものを一度リセットする
+        for (i in 0 until fieldMain.field.size){
+            for (j in 0 until fieldMain.field[0].size){
+                fieldSub[i][j] = fieldMain.field[i][j]
+            }
+        }
+
+        // 中心の状態を変更
+        if (fieldFlag){
+            fieldSub[selectGridCoordinates[0]][selectGridCoordinates[1]] = Condition.TentativeCenterEmpty
+        }
+
+        // 仮置きしているものを反映する
+        for (i in selectCardRange.indices){
+            for (j in 0 until selectCardRange[0].size) {
+                if (selectCardRange[i][j] == 0){
+                    continue
+                }
+
+                val x = selectGridCoordinates[0] + (i -2)
+                val y = selectGridCoordinates[1] + (j -2)
+                // 範囲外なら何もしない
+                if ((x < 0) || (x >= fieldMain.field.size) ||
+                    (y < 0) || (y >= fieldMain.field[0].size)){
+                    continue
+                }
+
+                // カード表示の中心のとき
+                if ((i == 2) && (j == 2)){
+                    if (fieldMain.field[x][y] == Condition.Empty){
+                        fieldSub[x][y] = Condition.TentativeCenterOK
+                    } else{
+                        fieldSub[x][y] = Condition.TentativeCenterNG
+                    }
+                }
+                // カード表示の中心でないとき
+                else{
+                    if (fieldMain.field[x][y] == Condition.Empty) {
+                        fieldSub[x][y] = Condition.TentativeOK
+                    } else {
+                        fieldSub[x][y] = Condition.TentativeNG
+                    }
+                }
+            }
+        }
+        _updateFlag.postValue(true)
+    }
 }
