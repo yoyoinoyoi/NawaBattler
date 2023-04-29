@@ -11,7 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.nawabattler.*
-import com.example.nawabattler.data.AllCard
+import com.example.nawabattler.data.FIELD_COLUMN
+import com.example.nawabattler.data.FIELD_ROW
 import com.example.nawabattler.data.OpponentData
 import com.example.nawabattler.databinding.FragmentBattleBinding
 import com.example.nawabattler.structure.Condition
@@ -39,14 +40,12 @@ class BattleFragment : Fragment() {
          * GridLayout のマスを生成する
          */
 
-        val column = 12
-        val row = 10
-        for (i in 0 until column * row) {
+        for (i in 0 until FIELD_COLUMN * FIELD_ROW) {
             // GridLayoutを使用するので、rowとcolumnを指定
             val dp = resources.displayMetrics.density
             val params = GridLayout.LayoutParams().also {
-                it.rowSpec = GridLayout.spec(i / row)
-                it.columnSpec = GridLayout.spec(i % row)
+                it.rowSpec = GridLayout.spec(i / FIELD_ROW)
+                it.columnSpec = GridLayout.spec(i % FIELD_ROW)
                 it.width = (40 * dp).roundToInt()
                 it.height = (40 * dp).roundToInt()
             }
@@ -73,9 +72,9 @@ class BattleFragment : Fragment() {
          * 各ボタンごとにクリックイベントを設定
          */
 
-        binding.cardbutton1.setOnClickListener { battleViewModel.onClickCard(0) }
-        binding.cardbutton2.setOnClickListener { battleViewModel.onClickCard(1) }
-        binding.cardbutton3.setOnClickListener { battleViewModel.onClickCard(2) }
+        binding.cardButton1.setOnClickListener { battleViewModel.onClickCard(0) }
+        binding.cardButton2.setOnClickListener { battleViewModel.onClickCard(1) }
+        binding.cardButton3.setOnClickListener { battleViewModel.onClickCard(2) }
 
         binding.rotatebutton.setOnClickListener { battleViewModel.onClickRotate() }
         binding.passbutton.setOnClickListener { battleViewModel.onClickPass() }
@@ -89,16 +88,16 @@ class BattleFragment : Fragment() {
             battleViewModel.updateScore()
             binding.score.text = scoreText()
             binding.Turn.text = turnText()
-            binding.cardbutton1.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[0]].Image)
-            binding.cardbutton2.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[1]].Image)
-            binding.cardbutton3.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[2]].Image)
+            binding.cardButton1.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[0]].Image)
+            binding.cardButton2.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[1]].Image)
+            binding.cardButton3.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[2]].Image)
         }
 
         // 選択した盤面の座標に変更があった場合
         battleViewModel.updateFlag.observe(viewLifecycleOwner) {
-            for (i in 0 until row * column) {
+            for (i in 0 until FIELD_ROW * FIELD_COLUMN) {
                 val v = binding.fieldGrid.getChildAt(i)
-                val cond = battleViewModel.fieldSub[i / row][i % row]
+                val cond = battleViewModel.fieldSub[i / FIELD_ROW][i % FIELD_ROW]
                 v.setBackgroundResource(conditionToImage(cond))
             }
         }

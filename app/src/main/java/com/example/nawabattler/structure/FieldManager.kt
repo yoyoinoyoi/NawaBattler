@@ -1,8 +1,5 @@
 package com.example.nawabattler.structure
 
-/*
-*
- */
 class FieldManager(initMap: Array<Array<Condition>>) {
     var field: Array<Array<Condition>>
     init{

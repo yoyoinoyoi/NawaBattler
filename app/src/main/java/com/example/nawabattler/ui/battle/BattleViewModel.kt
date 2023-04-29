@@ -290,10 +290,6 @@ class BattleViewModel(
     // 設置予定場所とゲームの情報をリンクさせる
     // ゲーム情報であるfieldMain が変わることはない
     private fun updateField() {
-        println("update grid!")
-        println("${selectCardId}")
-        println("${selectGridCoordinates[0]}, ${selectGridCoordinates[1]}")
-
         // 以前仮置きしていたものを一度リセットする
         for (i in 0 until fieldMain.field.size){
             for (j in 0 until fieldMain.field[0].size){

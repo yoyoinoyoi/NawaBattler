@@ -31,7 +31,7 @@ val mini = arrayOf(
     arrayOf(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1)
 )
 fun transConditionArray(baseArray: Array<Array<Int>>): Array<Array<Condition>>{
-    val ret = Array(12){Array(10){ Condition.Empty } }
+    val ret = Array(FIELD_COLUMN){Array(FIELD_ROW){ Condition.Empty } }
     for (i in baseArray.indices){
         for (j in 0 until baseArray[0].size){
             ret[i][j] = when(baseArray[i][j]){
