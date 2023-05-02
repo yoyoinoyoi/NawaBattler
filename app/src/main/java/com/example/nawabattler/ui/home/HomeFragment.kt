@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import com.example.nawabattler.CustomDialog
 import com.example.nawabattler.data.AllCard
+import com.example.nawabattler.data.PLAYER_STATICS
 import com.example.nawabattler.databinding.FragmentHomeBinding
 import java.io.File
 
@@ -17,7 +18,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private var playerStatics = arrayOf("", "", "", "", "")
+    private var playerStatics = arrayOf("", "", "", "", "", "")
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -31,12 +32,12 @@ class HomeFragment : Fragment() {
 
         val internal = requireContext().filesDir
         // デッキはdeckContent ファイルにid として記載されている
-        val file = File(internal, "playerStatics")
+        val file = File(internal, PLAYER_STATICS)
 
         // ファイルが無ければ作成する
         if (!file.exists()){
             val bufferedWriter = file.bufferedWriter()
-            val fileContent = "player\n0\n0\n0\n0"
+            val fileContent = "player\n0\n0\n0\n0\n0"
             bufferedWriter.write(fileContent)
             bufferedWriter.close()
         }
@@ -50,9 +51,9 @@ class HomeFragment : Fragment() {
         }
 
         binding.editTextTextPersonName.hint = playerStatics[0]
-        binding.playerWinLossRecordNumber.text = "${playerStatics[1]} 勝 ${playerStatics[2]} 敗"
-        binding.playerMaxWinStreakNumber.text = "${playerStatics[3]} 連勝"
-        binding.playerNowWinStreakNumber.text = "${playerStatics[4]} 連勝"
+        binding.playerWinLossRecordNumber.text = "${playerStatics[1]} 勝 ${playerStatics[2]} 敗 ${playerStatics[3]} 分"
+        binding.playerMaxWinStreakNumber.text = "${playerStatics[4]} 連勝"
+        binding.playerNowWinStreakNumber.text = "${playerStatics[5]} 連勝"
 
         // playerName を変更する
         binding.editTextTextPersonName
@@ -61,13 +62,11 @@ class HomeFragment : Fragment() {
                     editText.text.toString().let {
                         playerStatics[0] = editText.text.toString()
                         val bufferedWriter = file.bufferedWriter()
-                        playerStatics.forEach(){
-                            println(it.toString())
-                            bufferedWriter.write(it.toString())
+                        playerStatics.onEach(){
+                            bufferedWriter.write(it)
                             bufferedWriter.newLine()
                         }
                         bufferedWriter.close()
-
                     }
                     return@setOnEditorActionListener true
                 }

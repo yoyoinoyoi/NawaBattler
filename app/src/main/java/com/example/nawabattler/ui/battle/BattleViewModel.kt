@@ -8,6 +8,7 @@ import com.example.nawabattler.structure.Condition
 import com.example.nawabattler.structure.DeckManager
 import com.example.nawabattler.structure.FieldManager
 import java.io.File
+import java.lang.Integer.max
 
 @SuppressLint("StaticFieldLeak")
 class BattleViewModel(
@@ -51,6 +52,9 @@ class BattleViewModel(
     val deck1 = DeckManager()
     private val deck2 = DeckManager()
 
+    // 内部ファイルにアクセスする
+    private val internal = context.filesDir
+
     // コンストラクタに引数を持たせるための工夫
     class Factory(
         private val context: Context,
@@ -64,9 +68,7 @@ class BattleViewModel(
 
     init {
         // プレイヤーのデッキを生成する
-        val internal = context.filesDir
         val file = File(internal, DECK_CONTENT)
-        // ファイルにかかれたカードの画像を表示する
         val bufferedReader = file.bufferedReader()
         bufferedReader.readLines().onEach {
             val cardId = it.toInt()
@@ -76,7 +78,6 @@ class BattleViewModel(
         for (i in 0 until OpponentData[opponentNumber].DeckId.size){
             deck2.addCard(AllCard[OpponentData[opponentNumber].DeckId[i]])
         }
-        // フロントへ更新
         deck1.setUp()
         deck2.setUp()
     }
@@ -93,8 +94,9 @@ class BattleViewModel(
         val index = intArrayOf(clickIndex / 10, clickIndex % 10)
 
         // 確定ボタン以外で盤面をクリックした場合
-        if ( !( fieldFlag && (index[0] == selectGridCoordinates[0]) && (index[1] == selectGridCoordinates[1]) ) ){
-
+        if (!( fieldFlag
+                    && (index[0] == selectGridCoordinates[0])
+                    && (index[1] == selectGridCoordinates[1]) ) ){
             selectGridCoordinates = index
             fieldFlag = true
         }
@@ -152,12 +154,11 @@ class BattleViewModel(
     }
 
     // Range を右に90度だけ回転させる
-    // Range: 5x5 の配列
     private fun rotateRange(range: Array<IntArray>): Array<IntArray>{
         val newList = Array(5){ intArrayOf(0, 0, 0, 0, 0) }
         for (i in range.indices){
             for (j in 0 until range[0].size){
-                newList[i][j] = range[j][range[0].size -i -1]
+                newList[i][j] = range[-j +4][i]
             }
         }
         return newList
@@ -224,7 +225,7 @@ class BattleViewModel(
     // 自分と相手のカードから盤面を更新するまでの流れ
     private fun play(){
         val computer = computerTurn()
-        var myRangeSize = 0
+        val myRangeSize = AllCard[selectCardId].cardSize()
         var comRangeSize = 0
         val comCardCoordinates = mutableListOf<IntArray>()
         val wallRange = Array(5){ intArrayOf(0, 0, 0, 0, 0) }
@@ -233,9 +234,6 @@ class BattleViewModel(
         // それぞれのカードの範囲を比較
         for (i in 0 until 5){
             for (j in 0 until 5){
-                if (selectCardRange[i][j] == 1){
-                    myRangeSize++
-                }
                 if (computer.second[i][j] == 1){
                     comRangeSize++
                     val x = i -2 +computer.first[0]
@@ -350,5 +348,35 @@ class BattleViewModel(
             }
         }
         _updateFlag.postValue(true)
+    }
+
+    // ゲームが終了した際の処理
+    fun gameSet(){
+        val file = File(internal, PLAYER_STATICS)
+        val playerStatics = arrayOf("", "", "", "", "", "")
+        val bufferedReader = file.bufferedReader()
+        var t = 0
+        bufferedReader.readLines().onEach {
+            playerStatics[t] = it
+            t++
+        }
+        if (player1Score > player2Score){
+            playerStatics[1] = (playerStatics[1].toInt() +1).toString()
+            playerStatics[4] = (playerStatics[4].toInt() +1).toString()
+            playerStatics[4] = max(playerStatics[4].toInt(), playerStatics[5].toInt()).toString()
+        }
+        else if (player1Score < player2Score) {
+            playerStatics[2] = (playerStatics[2].toInt() +1).toString()
+            playerStatics[4] = "0"
+        }
+        else{
+            playerStatics[3] = (playerStatics[3].toInt() +1).toString()
+        }
+        val bufferedWriter = file.bufferedWriter()
+        playerStatics.onEach{
+            bufferedWriter.write(it)
+            bufferedWriter.newLine()
+        }
+        bufferedWriter.close()
     }
 }
