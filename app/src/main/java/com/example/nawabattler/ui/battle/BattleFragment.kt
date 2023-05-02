@@ -9,6 +9,7 @@ import android.widget.GridLayout
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.nawabattler.*
 import com.example.nawabattler.data.FIELD_COLUMN
@@ -76,8 +77,8 @@ class BattleFragment : Fragment() {
         binding.cardButton2.setOnClickListener { battleViewModel.onClickCard(1) }
         binding.cardButton3.setOnClickListener { battleViewModel.onClickCard(2) }
 
-        binding.rotatebutton.setOnClickListener { battleViewModel.onClickRotate() }
-        binding.passbutton.setOnClickListener { battleViewModel.onClickPass() }
+        binding.rotateButton.setOnClickListener { battleViewModel.onClickRotate() }
+        binding.passButton.setOnClickListener { battleViewModel.onClickPass() }
 
         /**
          * viewModel の値を監視する
@@ -91,6 +92,19 @@ class BattleFragment : Fragment() {
             binding.cardButton1.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[0]].Image)
             binding.cardButton2.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[1]].Image)
             binding.cardButton3.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[2]].Image)
+            // ゲーム終了時にダイアログを表示
+            if (it > battleViewModel.totalTurn){
+                battleViewModel.gameSet()
+                CustomDialog.Builder(this)
+                    .setTitle(resultText())
+                    .setMessage(scoreText())
+                    .setPositiveButton("わかった") {
+                        val action = BattleFragmentDirections.actionBattleFragmentToHomeFragment()
+                        findNavController().navigate(action)
+                    }
+                    .build()
+                    .show(childFragmentManager, CustomDialog::class.simpleName)
+            }
         }
 
         // 選択した盤面の座標に変更があった場合
@@ -114,6 +128,18 @@ class BattleFragment : Fragment() {
     /**
      * 表示に関する関数
      */
+
+    private fun resultText() : String{
+        val player1Score = battleViewModel.player1Score
+        val player2Score = battleViewModel.player2Score
+        return if (player1Score > player2Score){
+            "YOU WIN!!"
+        } else if (player1Score < player2Score){
+            "YOU LOSE..."
+        } else {
+            "-DRAW-"
+        }
+    }
 
     private fun scoreText() : String {
         val player1Score = battleViewModel.player1Score
