@@ -125,4 +125,44 @@ val AllCard = arrayOf(
             intArrayOf(0, 0, 0, 0, 0)
         )
     ),
+    Card(
+        R.drawable.scissors,
+        arrayOf(
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 1, 0, 1, 1),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0)
+        )
+    ),
+    Card(
+        R.drawable.fountainpen,
+        arrayOf(
+            intArrayOf(0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 1, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(1, 1, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0)
+        )
+    ),
+    Card(
+        R.drawable.barrier,
+        arrayOf(
+            intArrayOf(0, 1, 1, 0, 0),
+            intArrayOf(1, 0, 0, 1, 0),
+            intArrayOf(1, 0, 0, 1, 0),
+            intArrayOf(0, 1, 1, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0)
+        )
+    ),
+    Card(
+        R.drawable.pinwheel,
+        arrayOf(
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(1, 1, 1, 0, 0),
+            intArrayOf(0, 1, 1, 1, 0),
+            intArrayOf(0, 1, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0)
+        )
+    ),
 )
