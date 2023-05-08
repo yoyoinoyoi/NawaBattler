@@ -12,7 +12,7 @@ import com.example.nawabattler.data.AllCard
 class DeckFragmentAdapter(private val iImages: ArrayList<Int>):
     RecyclerView.Adapter<DeckFragmentAdapter.ViewHolder>() {
 
-    lateinit var listener: OnItemClickListener
+    private lateinit var listener: OnItemClickListener
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -36,13 +36,13 @@ class DeckFragmentAdapter(private val iImages: ArrayList<Int>):
 
         viewHolder.imageView.setBackgroundResource(iImages[position])
         viewHolder.button.setOnClickListener {
-            listener.onItemClickListener(it, position, AllCard[position].Image.toString())
+            listener.onClick(it, position, AllCard[position].Image.toString())
         }
     }
 
     // インターフェースの作成
     interface OnItemClickListener{
-        fun onItemClickListener(view: View, position: Int, clickedText: String)
+        fun onClick(view: View, position: Int, clickedText: String)
     }
 
     // リスナー
