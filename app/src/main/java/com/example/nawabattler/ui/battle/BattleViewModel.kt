@@ -1,16 +1,17 @@
 package com.example.nawabattler.ui.battle
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.*
+import com.example.nawabattler.R
+import com.example.nawabattler.ai.Agent
 import com.example.nawabattler.data.*
+import com.example.nawabattler.structure.Card
 import com.example.nawabattler.structure.Condition
 import com.example.nawabattler.structure.DeckManager
 import com.example.nawabattler.structure.FieldManager
 import java.io.File
 import java.lang.Integer.max
 
-@SuppressLint("StaticFieldLeak")
 class BattleViewModel(
     opponentNumber : Int,
     context : Context
@@ -27,7 +28,7 @@ class BattleViewModel(
     // 選択されたgrid の座標
     private var selectGridCoordinates = intArrayOf(6, 4)
     // 全ターン数
-    val totalTurn = 5
+    val totalTurn = 6
     // 今のターン数
     val nowTurnCount: LiveData<Int>
         get() = _nowTurnCount
@@ -49,8 +50,10 @@ class BattleViewModel(
         get() = _updateFlag
     private  val _updateFlag = MutableLiveData(false)
 
-    val deck1 = DeckManager()
-    private val deck2 = DeckManager()
+    val deck1: DeckManager
+    val deck2: DeckManager
+
+    private val agent: Agent
 
     // 内部ファイルにアクセスする
     private val internal = context.filesDir
@@ -70,16 +73,19 @@ class BattleViewModel(
         // プレイヤーのデッキを生成する
         val file = File(internal, DECK_CONTENT)
         val bufferedReader = file.bufferedReader()
+        val deckCard1 = mutableListOf<Card>()
+        val deckCard2 = mutableListOf<Card>()
         bufferedReader.readLines().onEach {
             val cardId = it.toInt()
-            deck1.addCard(AllCard[cardId])
+            deckCard1.add(AllCard[cardId])
         }
         // 選ばれた対戦相手のデッキを生成する
         for (i in 0 until OpponentData[opponentNumber].DeckId.size){
-            deck2.addCard(AllCard[OpponentData[opponentNumber].DeckId[i]])
+            deckCard2.add(AllCard[OpponentData[opponentNumber].DeckId[i]])
         }
-        deck1.setUp()
-        deck2.setUp()
+        deck1 = DeckManager(deckCard1)
+        deck2 = DeckManager(deckCard2)
+        agent = OpponentData[opponentNumber].Agent
     }
 
     // 盤面をクリックしたとき、その情報を受け渡す
@@ -111,7 +117,7 @@ class BattleViewModel(
     // 画面下のカードをクリックしたとき、その情報を受け渡す
     fun onClickCard(clickButton: Int){
 
-        if (deck1.handCard[clickButton] == -1){
+        if (deck1.handCard[clickButton].Image == R.drawable.empty){
             // カードが何もない時には何もしない
             cardFlag = false
             selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
@@ -124,7 +130,7 @@ class BattleViewModel(
         } else {
             // 正常に受け渡す
             selectCardId = clickButton
-            selectCardRange = deck1.handCard(selectCardId).Range
+            selectCardRange = deck1.handCard[selectCardId].Range
             cardFlag = true
             fieldFlag = false
         }
@@ -164,67 +170,9 @@ class BattleViewModel(
         return newList
     }
 
-    // コンピュータが実行するとき
-    private fun computerTurn(): Pair<IntArray, Array<IntArray>>{
-        // deck はdeckField2 を用いる
-
-        // 手札からまずカードを決める
-        for (choiceCardId in 0 until deck2.handCard.size){
-            // 回転させる
-            val choiceCard = deck2.handCard[choiceCardId]
-            if (choiceCard == -1){
-                continue
-            }
-            val choiceRange1 = deck2.deck[choiceCard].Range
-            val choiceRange2 = rotateRange(choiceRange1)
-            val choiceRange3 = rotateRange(choiceRange2)
-            val choiceRange4 = rotateRange(choiceRange3)
-
-            val candidates = mutableListOf<IntArray>()
-            val ranges = mutableListOf<Array<IntArray>>()
-            for (i in 0 until fieldMain.field.size){
-                for (j in 0 until fieldMain.field[0].size){
-                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange1, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange1)
-                    }
-                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange2, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange2)
-                    }
-                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange3, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange3)
-                    }
-                    if (fieldMain.canSet(intArrayOf(i, j), choiceRange4, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange4)
-                    }
-                }
-            }
-            if (candidates.isNotEmpty()){
-                val randomNum = (candidates.indices).random()
-                deck2.castCard(choiceCardId)
-                return Pair(candidates[randomNum], ranges[randomNum])
-            }
-        }
-
-        // 置けなくなったら適当に選んで捨てる
-        for (choiceCardId in 0 until deck2.handCard.size){
-            val choiceCard = deck2.handCard[choiceCardId]
-            if (choiceCard != -1){
-                deck2.castCard(choiceCardId)
-                return Pair(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)})
-            }
-        }
-
-        // たぶんここまでいかない
-        return Pair(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)})
-    }
-
     // 自分と相手のカードから盤面を更新するまでの流れ
     private fun play(){
-        val computer = computerTurn()
+        val computer = agent.play(fieldMain, deck1.handCard, deck2.handCard)
         val myRangeSize = AllCard[selectCardId].cardSize()
         var comRangeSize = 0
         val comCardCoordinates = mutableListOf<IntArray>()
@@ -363,11 +311,11 @@ class BattleViewModel(
         if (player1Score > player2Score){
             playerStatics[1] = (playerStatics[1].toInt() +1).toString()
             playerStatics[4] = (playerStatics[4].toInt() +1).toString()
-            playerStatics[4] = max(playerStatics[4].toInt(), playerStatics[5].toInt()).toString()
+            playerStatics[5] = max(playerStatics[4].toInt(), playerStatics[5].toInt()).toString()
         }
         else if (player1Score < player2Score) {
             playerStatics[2] = (playerStatics[2].toInt() +1).toString()
-            playerStatics[4] = "0"
+            playerStatics[5] = "0"
         }
         else{
             playerStatics[3] = (playerStatics[3].toInt() +1).toString()
