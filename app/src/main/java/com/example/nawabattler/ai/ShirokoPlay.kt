@@ -5,13 +5,16 @@ import com.example.nawabattler.structure.Card
 import com.example.nawabattler.structure.Condition
 import com.example.nawabattler.structure.FieldManager
 
-class ShirokoAgent() : Agent() {
+class ShirokoAgent: Agent() {
 
     override fun play(
         fm: FieldManager,
         selfHandCard: MutableList<Card>,
-        opponentHandCard: MutableList<Card>): Pair<IntArray, Array<IntArray>> {
+        opponentHandCard: MutableList<Card>
+    ): Triple<IntArray, Array<IntArray>, Int> {
+
         // 手札からまずカードを決める
+        val candidates = mutableListOf<Triple<IntArray, Array<IntArray>, Int>>()
         for (choiceCardId in opponentHandCard.indices){
             // 回転させる
             val choiceCard = opponentHandCard[choiceCardId]
@@ -23,46 +26,38 @@ class ShirokoAgent() : Agent() {
             val choiceRange3 = rotateRange(choiceRange2)
             val choiceRange4 = rotateRange(choiceRange3)
 
-            val candidates = mutableListOf<IntArray>()
-            val ranges = mutableListOf<Array<IntArray>>()
             for (i in 0 until fm.field.size){
                 for (j in 0 until fm.field[0].size){
                     if (fm.canSet(intArrayOf(i, j), choiceRange1, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange1)
+                        candidates.add(Triple(intArrayOf(i, j), choiceRange1, choiceCardId))
                     }
                     if (fm.canSet(intArrayOf(i, j), choiceRange2, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange2)
+                        candidates.add(Triple(intArrayOf(i, j), choiceRange2, choiceCardId))
                     }
                     if (fm.canSet(intArrayOf(i, j), choiceRange3, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange3)
+                        candidates.add(Triple(intArrayOf(i, j), choiceRange3, choiceCardId))
                     }
                     if (fm.canSet(intArrayOf(i, j), choiceRange4, Condition.Player2)){
-                        candidates.add(intArrayOf(i, j))
-                        ranges.add(choiceRange4)
+                        candidates.add(Triple(intArrayOf(i, j), choiceRange4, choiceCardId))
                     }
                 }
             }
-            if (candidates.isNotEmpty()){
-                val randomNum = (candidates.indices).random()
-                // deck2.castCard(choiceCardId)
-                return Pair(candidates[randomNum], ranges[randomNum])
-            }
+        }
+        if (candidates.isNotEmpty()){
+            val randomNum = (candidates.indices).random()
+            return candidates[randomNum]
         }
 
         // 置けなくなったら適当に選んで捨てる
         for (choiceCardId in opponentHandCard.indices){
             val choiceCard = opponentHandCard[choiceCardId]
             if (choiceCard.Image != R.drawable.empty){
-                // deck2.castCard(choiceCardId)
-                return Pair(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)})
+                return Triple(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)}, choiceCardId)
             }
         }
 
         // たぶんここまでいかない
-        return Pair(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)})
+        return Triple(intArrayOf(0, 0), Array(5){ intArrayOf(0, 0, 0, 0, 0)}, -1)
     }
 
 }

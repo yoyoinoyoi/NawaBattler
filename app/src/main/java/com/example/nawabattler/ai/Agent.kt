@@ -8,7 +8,8 @@ abstract class Agent(){
     abstract fun play(
         fm: FieldManager,
         selfHandCard: MutableList<Card>,
-        opponentHandCard: MutableList<Card>): Pair<IntArray, Array<IntArray>>
+        opponentHandCard: MutableList<Card>
+    ): Triple<IntArray, Array<IntArray>, Int>
 
     protected fun rotateRange(range: Array<IntArray>): Array<IntArray>{
         val newList = Array(5){ intArrayOf(0, 0, 0, 0, 0) }

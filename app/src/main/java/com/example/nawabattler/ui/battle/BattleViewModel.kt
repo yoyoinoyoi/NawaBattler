@@ -211,8 +211,7 @@ class BattleViewModel(
         } else if (myRangeSize > comRangeSize) {
             fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
             fieldMain.setColor(computer.first, computer.second, Condition.Player2)
-        }
-        else {
+        } else {
             fieldMain.setColor(selectGridCoordinates, selectCardRange, Condition.Player1)
             fieldMain.setColor(computer.first, computer.second, Condition.Player2)
             fieldMain.setColor(selectGridCoordinates, wallRange, Condition.Wall)
@@ -221,6 +220,7 @@ class BattleViewModel(
         cardFlag = false
         fieldFlag = false
         deck1.castCard(selectCardId)
+        deck2.castCard(computer.third)
         selectGridCoordinates = intArrayOf(6, 4)
         selectCardRange = Array(5){ intArrayOf(0, 0, 0, 0, 0)}
         _nowTurnCount.value = _nowTurnCount.value!! +1
@@ -310,8 +310,8 @@ class BattleViewModel(
         }
         if (player1Score > player2Score){
             playerStatics[1] = (playerStatics[1].toInt() +1).toString()
-            playerStatics[4] = (playerStatics[4].toInt() +1).toString()
-            playerStatics[5] = max(playerStatics[4].toInt(), playerStatics[5].toInt()).toString()
+            playerStatics[5] = (playerStatics[5].toInt() +1).toString()
+            playerStatics[4] = max(playerStatics[4].toInt(), playerStatics[5].toInt()).toString()
         }
         else if (player1Score < player2Score) {
             playerStatics[2] = (playerStatics[2].toInt() +1).toString()
