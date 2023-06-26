@@ -1,12 +1,15 @@
 package com.example.nawabattler.ui.battle
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageButton
+import androidx.core.view.ViewCompat.setSystemGestureExclusionRects
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -73,9 +76,9 @@ class BattleFragment : Fragment() {
          * 各ボタンごとにクリックイベントを設定
          */
 
-        binding.cardButton1.setOnClickListener { battleViewModel.onClickCard(0) }
-        binding.cardButton2.setOnClickListener { battleViewModel.onClickCard(1) }
-        binding.cardButton3.setOnClickListener { battleViewModel.onClickCard(2) }
+        binding.playerCard1.setOnClickListener { battleViewModel.onClickCard(0) }
+        binding.playerCard2.setOnClickListener { battleViewModel.onClickCard(1) }
+        binding.playerCard3.setOnClickListener { battleViewModel.onClickCard(2) }
 
         binding.rotateButton.setOnClickListener { battleViewModel.onClickRotate() }
         binding.passButton.setOnClickListener { battleViewModel.onClickPass() }
@@ -87,17 +90,21 @@ class BattleFragment : Fragment() {
         // 実際に手を決めた時の動作
         battleViewModel.nowTurnCount.observe(viewLifecycleOwner) {
             battleViewModel.updateScore()
-            binding.score.text = scoreText()
+            binding.playerScore.text = "${battleViewModel.player1Score}"
+            binding.opponentScore.text = "${battleViewModel.player2Score}"
             binding.Turn.text = turnText()
-            binding.cardButton1.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[0]].Image)
-            binding.cardButton2.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[1]].Image)
-            binding.cardButton3.setBackgroundResource(battleViewModel.deck1.deck[battleViewModel.deck1.handCard[2]].Image)
+            binding.playerCard1.setBackgroundResource(battleViewModel.deck1.handCard[0].Image)
+            binding.playerCard2.setBackgroundResource(battleViewModel.deck1.handCard[1].Image)
+            binding.playerCard3.setBackgroundResource(battleViewModel.deck1.handCard[2].Image)
+            binding.opponentCard1.setBackgroundResource(battleViewModel.deck2.handCard[0].Image)
+            binding.opponentCard2.setBackgroundResource(battleViewModel.deck2.handCard[1].Image)
+            binding.opponentCard3.setBackgroundResource(battleViewModel.deck2.handCard[2].Image)
             // ゲーム終了時にダイアログを表示
             if (it > battleViewModel.totalTurn){
                 battleViewModel.gameSet()
                 CustomDialog.Builder(this)
                     .setTitle(resultText())
-                    .setMessage(scoreText())
+                    .setMessage("${battleViewModel.player1Score} vs ${battleViewModel.player2Score}")
                     .setPositiveButton("わかった") {
                         val action = BattleFragmentDirections.actionBattleFragmentToHomeFragment()
                         findNavController().navigate(action)
@@ -139,12 +146,6 @@ class BattleFragment : Fragment() {
         } else {
             "-DRAW-"
         }
-    }
-
-    private fun scoreText() : String {
-        val player1Score = battleViewModel.player1Score
-        val player2Score = battleViewModel.player2Score
-        return "$player1Score vs $player2Score"
     }
 
     private fun turnText() : String {

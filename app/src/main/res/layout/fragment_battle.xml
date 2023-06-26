@@ -7,85 +7,151 @@
     android:background="@color/mainColor"
     tools:context=".ui.battle.BattleFragment">
 
+    <ImageView
+        android:id="@+id/opponentImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/yellow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
+
+    <TextView
+        android:id="@+id/opponentScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="80dp"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="35sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/opponentImage"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/opponentCard1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="138dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
+
+    <ImageButton
+        android:id="@+id/opponentCard2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="72dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
+
+    <ImageButton
+        android:id="@+id/opponentCard3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,HardcodedText"
+        android:contentDescription="TODO" />
+
     <GridLayout
         android:id="@+id/fieldGrid"
         android:layout_width="400dp"
         android:layout_height="480dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginTop="66dp"
         android:columnCount="10"
         android:rowCount="12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/opponentImage"
         tools:ignore="MissingConstraints">
 
     </GridLayout>
-
-    <TextView
-        android:id="@+id/Turn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/dotgothic"
-        android:includeFontPadding="false"
-        android:text="@string/Turn"
-        android:textColor="@color/black"
-        android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/playerImage"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/anonymous"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
         tools:ignore="ContentDescription,HardcodedText"
         android:contentDescription="TODO" />
 
-    <ImageView
-        android:id="@+id/opponentImage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="56dp"
-        android:background="@drawable/yellow"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
-        tools:ignore="ContentDescription,HardcodedText"
-        android:contentDescription="TODO" />
-
     <TextView
-        android:id="@+id/score"
+        android:id="@+id/playerScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="80dp"
         android:fontFamily="@font/dotgothic"
         android:includeFontPadding="false"
-        android:text="@string/versus"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="35sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid" />
+
+    <View
+        android:id="@+id/TurnView"
+        android:layout_width="112dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/Turn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/dotgothic"
+        android:includeFontPadding="false"
+        android:text="@string/Turn"
         android:textColor="@color/black"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
         tools:ignore="MissingConstraints" />
 
     <ImageButton
-        android:id="@+id/cardButton1"
+        android:id="@+id/playerCard1"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
@@ -93,25 +159,25 @@
         android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/cardButton2"
+        android:id="@+id/playerCard2"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/white"
-        app:layout_constraintStart_toEndOf="@+id/cardButton1"
+        app:layout_constraintStart_toEndOf="@+id/playerCard1"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
         tools:ignore="ContentDescription,HardcodedText"
         android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/cardButton3"
+        android:id="@+id/playerCard3"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/white"
-        app:layout_constraintStart_toEndOf="@+id/cardButton2"
+        app:layout_constraintStart_toEndOf="@+id/playerCard2"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
         tools:ignore="ContentDescription,HardcodedText"
         android:contentDescription="TODO" />
@@ -120,8 +186,8 @@
         android:id="@+id/rotateButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginStart="352dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/rotate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
@@ -132,8 +198,8 @@
         android:id="@+id/passButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="184dp"
+        android:layout_marginStart="352dp"
+        android:layout_marginTop="128dp"
         android:background="@drawable/dust"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldGrid"
